@@ -1,0 +1,10 @@
+Java基础知识
+
+12. String StringBuffer 和 StringBuilder 的区别是什么? String 为什么是不可变的?
+   小结：（1）如果要操作少量的数据用 String；
+
+         （2）多线程操作字符串缓冲区下操作大量数据 StringBuffer；
+
+         （3）单线程操作字符串缓冲区下操作大量数据 StringBuilder。
+ 
+ 35 Java 中 IO 流分为几种?BIO,NIO,AIO 有什么区别?
