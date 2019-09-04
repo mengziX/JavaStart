@@ -1,0 +1,55 @@
+/**
+	 	* A:泛型概述
+		* B:泛型好处
+			* 提高安全性(将运行期的错误转换到编译期) 
+			* 省去强转的麻烦
+		* C:泛型基本使用
+			* <>中放的必须是引用数据类型 
+		* D:泛型使用注意事项
+			* 前后的泛型必须一致,或者后面的泛型可以省略不写(1.7的新特性菱形泛型)  
+
+	 */
+   
+   ArrayList<Person> list = new ArrayList<Person>();
+		list.add(new Person("张三", 23));
+		list.add(new Person("李四", 24));
+		Iterator<Person> it = list.iterator();
+		while(it.hasNext())
+			System.out.println(p.getName() + "..." + p.getAge());
+		
+    
+    /**
+	 * * A:泛型通配符<?>
+			* 任意类型，如果没有明确，那么就是Object以及任意的Java类了
+		* B:? extends E
+			* 向下限定，E及其子类
+		* C:? super E
+			* 向上限定，E及其父类
+	 */
+	public static void main(String[] args) {
+		//List<?> list = new ArrayList<Integer>();			//当右边的泛型是不确定时,左边可以指定为?
+		ArrayList<Person> list1 = new ArrayList<>();
+		list1.add(new Person("张三", 23));
+		list1.add(new Person("李四", 24));
+		list1.add(new Person("王五", 25));
+		
+		ArrayList<Student> list2 = new ArrayList<>();
+		list2.add(new Student("赵六", 26));
+		list2.add(new Student("周七", 27));
+		
+		list1.addAll(list2);
+		System.out.println(list1);
+	}
+  
+  /**
+	 * 用LinkedList模拟栈结构
+	 */
+   LinkedList list = new LinkedList();					//创建集合对象
+		list.addLast("a");
+		list.addLast("b");
+		list.addLast("c");
+		list.addLast("d");
+		while(!list.isEmpty()) 
+			System.out.println(list.removeLast());
+	
+  
