@@ -1,0 +1,107 @@
+/**
+	 * File(String pathname)：根据一个路径得到File对象
+	 * File(String parent, String child):根据一个目录和一个子文件/目录得到File对象
+	 * File(File parent, String child):根据一个父File对象和一个子文件/目录得到File对象
+		File parent = new File("F:\\双元课堂\\day19\\video");
+		String child = "001_今日内容.avi";
+		File file = new File(parent, child);
+		System.out.println(file.exists());
+		System.out.println(parent.exists());
+    
+   
+* * A:创建功能
+			* public boolean createNewFile():创建文件 如果存在这样的文件，就不创建了
+			* public boolean mkdir():创建文件夹 如果存在这样的文件夹，就不创建了
+			* public boolean mkdirs():创建文件夹,如果父文件夹不存在，会帮你创建出来
+		* B:案例演示
+			* File类的创建功能
+		
+			* 注意事项：
+				* 如果你创建文件或者文件夹忘了写盘符路径，那么，默认在项目路径下。
+    File file = new File("yyy.txt");
+		System.out.println(file.createNewFile());			//如果没有就创建,返回true
+		File dir3 = new File("ccc\\ddd");
+		System.out.println(dir3.mkdirs()); 				//创建多级目录
+    
+    
+* * A:重命名和删除功能
+			* public boolean renameTo(File dest):把文件重命名为指定的文件路径
+			* public boolean delete():删除文件或者文件夹
+		* B:重命名注意事项
+			* 如果路径名相同，就是改名。
+			* 如果路径名不同，就是改名并剪切。
+		* C:删除注意事项：
+			* Java中的删除不走回收站。
+			* 要删除一个文件夹，请注意该文件夹内不能包含文件或者文件夹
+	 */
+   
+  
+* * A:重命名和删除功能
+			* public boolean renameTo(File dest):把文件重命名为指定的文件路径
+			* public boolean delete():删除文件或者文件夹
+		* B:重命名注意事项
+			* 如果路径名相同，就是改名。
+			* 如果路径名不同，就是改名并剪切。
+		* C:删除注意事项：
+			* Java中的删除不走回收站。
+			* 要删除一个文件夹，请注意该文件夹内不能包含文件或者文件夹
+	 */
+    File file1 = new File("yyy.txt");
+		System.out.println(file1.delete());
+		File file3 = new File("ccc");					//如果删除一个文件夹,那么文件夹必须是空的
+		System.out.println(file3.delete());
+    
+    
+* * A:判断功能
+		* public boolean isDirectory():判断是否是目录
+		* public boolean isFile():判断是否是文件
+		* public boolean exists():判断是否存在
+		* public boolean canRead():判断是否可读
+		* public boolean canWrite():判断是否可写
+		* public boolean isHidden():判断是否隐藏
+  
+  
+* * A:获取功能
+		* public String getAbsolutePath()：获取绝对路径
+		* public String getPath():获取路径
+		* public String getName():获取名称
+		* public long length():获取长度。字节数
+		* public long lastModified():获取最后一次的修改时间，毫秒值
+		* public String[] list():获取指定目录下的所有文件或者文件夹的名称数组
+		* public File[] listFiles():获取指定目录下的所有文件或者文件夹的File数组 
+    
+   
+* * A:面试题1
+			* final,finally和finalize的区别
+			* final可以修饰类,不能被继承
+			* 修饰方法,不能被重写
+			* 修饰变量,只能赋值一次
+			* 
+			* finally是try语句中的一个语句体,不能单独使用,用来释放资源
+			* 
+			* finalize是一个方法,当垃圾回收器确定不存在对该对象的更多引用时，由对象的垃圾回收器调用此方法。
+		* B:面试题2
+			* 如果catch里面有return语句，请问finally的代码还会执行吗?如果会，请问是在return前还是return后。
+	 */
+   .....finally {
+			x = 40;
+			//return x;					千万不要在finally里面写返回语句,因为finally的作用是为了释放资源,是肯定会执行的
+										    //如果在这里面写返回语句,那么try和catch的结果都会被改变,所以这么写就是犯罪}
+           
+* @param args
+	 * * A:案例演示
+	 * 需求：判断E盘目录下是否有后缀名为.jpg的文件，如果有，就输出该文件名称
+	 */
+	public static void main(String[] args) {
+		File dir = new File("E:\\");
+    		String[] arr = dir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				File file = new File(dir, name);
+				return file.isFile() && file.getName().endsWith(".jpg");
+			}
+		});	
+		for (String string : arr) {
+			System.out.println(string);
+		}
+	}
