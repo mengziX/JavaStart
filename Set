@@ -1,0 +1,46 @@
+/**
+	 * @param args
+	 * Set集合,无索引,不可以重复,无序(存取不一致)
+*/
+HashSet<Person> hs = new HashSet<>();
+		hs.add(new Person("张三", 23));
+		hs.add(new Person("张三", 23));
+		hs.add(new Person("李四", 24));
+		hs.add(new Person("李四", 24));
+		hs.add(new Person("李四", 24));
+		hs.add(new Person("李四", 24));
+		//System.out.println(hs.size());
+		System.out.println(hs);
+
+HashSet<String> hs = new HashSet<>();					//创建HashSet对象
+		boolean b1 = hs.add("a");
+		boolean b2 = hs.add("a");								//当向set集合中存储重复元素的时候返回为false
+		hs.add("b");
+		hs.add("c");
+		hs.add("d");
+		System.out.println(hs);									//HashSet的继承体系中有重写toString方法
+		System.out.println(b1);
+		System.out.println(b2);
+		for (String string : hs)  							//只要能用迭代器迭代的,就可以使用增强for循环遍历
+			System.out.println(string);
+ 
+* LinkedHashSet
+	 * 底层是链表实现的,是set集合中唯一一个能保证怎么存就怎么取的集合对象
+	 * 因为是HashSet的子类,所以也是保证元素唯一的,与HashSet的原理一样
+	 */
+   LinkedHashSet<String> lhs = new LinkedHashSet<>();
+		lhs.add("a");
+		lhs.add("a");
+		lhs.add("a");
+		lhs.add("a");
+		lhs.add("b");
+		lhs.add("c");
+		lhs.add("d");
+		System.out.println(lhs);
+    
+* @param args
+	 * TreeSet集合是用来对象元素进行排序的,同样他也可以保证元素的唯一
+	 * 当compareTo方法返回0的时候集合中只有一个元素
+	 * 当compareTo方法返回正数的时候集合会怎么存就怎么取
+	 * 当compareTo方法返回负数的时候集合会倒序存储
+	 */
