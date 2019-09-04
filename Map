@@ -1,0 +1,97 @@
+* * A:Map集合的功能概述
+		* a:添加功能
+			* V put(K key,V value):添加元素。
+				* 如果键是第一次存储，就直接存储元素，返回null
+				* 如果键不是第一次存在，就用值把以前的值替换掉，返回以前的值
+		* b:删除功能
+			* void clear():移除所有的键值对元素
+			* V remove(Object key)：根据键删除键值对元素，并把值返回
+		* c:判断功能
+			* boolean containsKey(Object key)：判断集合是否包含指定的键
+			* boolean containsValue(Object value):判断集合是否包含指定的值
+			* boolean isEmpty()：判断集合是否为空
+		* d:获取功能
+			* Set<Map.Entry<K,V>> entrySet():
+			* V get(Object key):根据键获取值
+			* Set<K> keySet():获取集合中所有键的集合
+			* Collection<V> values():获取集合中所有值的集合
+		* e:长度功能
+			* int size()：返回集合中的键值对的个数
+	 */
+   
+   for(String key : map.keySet()) {			//map.keySet()是所有键的集合
+			System.out.println(key + "=" + map.get(key));
+		}
+    
+* * A:案例演示
+	 * HashMap集合键是Student值是String的案例
+	 * 键是学生对象,代表每一个学生
+	 * 值是字符串对象,代表学生归属地
+	 */
+   HashMap<Student, String> hm = new HashMap<>();
+		hm.put(new Student("张三", 23), "北京");
+		hm.put(new Student("张三", 23), "上海");
+    
+* LinkedHashMap可以保证怎么存就怎么取
+	 */
+   LinkedHashMap<String, Integer> lhm = new LinkedHashMap<>();
+		lhm.put("张三", 23);
+		lhm.put("李四", 24);
+    
+* * A:案例演示
+	 * TreeMap集合键是Student值是String的案例
+	 */
+   TreeMap<Student, String> tm = new TreeMap<>(new Comparator<Student>() {
+
+			@Override
+			public int compare(Student s1, Student s2) {
+				int num = s1.getName().compareTo(s2.getName());		//按照姓名比较
+				return num == 0 ? s1.getAge() - s2.getAge() : num;
+			}
+		});
+		tm.put(new Student("张三", 23), "北京");
+		tm.put(new Student("李四", 13), "上海");
+    
+    
+    * * A:案例演示
+	 * 集合嵌套之HashMap嵌套HashMap
+	 * 
+	 * 需求:
+	 * 双元课堂有很多基础班
+	 * 第88期基础班定义成一个双列集合,键是学生对象,值是学生的归属地
+	 * 第99期基础班定义成一个双列集合,键是学生对象,值是学生的归属地
+	 * 
+	 * 无论88期还是99期都是班级对象,所以为了便于统一管理,把这些班级对象添加到双元课堂集合中
+	 */
+   //定义88期基础班
+		HashMap<Student, String> hm88 = new HashMap<>();
+		hm88.put(new Student("张三", 23), "北京");
+   //定义99期基础班
+		HashMap<Student, String> hm99 = new HashMap<>();
+		hm99.put(new Student("唐僧", 1023), "北京");
+   //定义双元课堂
+		HashMap<HashMap<Student, String>, String> hm = new HashMap<>();
+		hm.put(hm88, "第88期基础班");
+		hm.put(hm99, "第99期基础班");
+    //遍历双列集合
+		for(HashMap<Student, String> h : hm.keySet()) {		//hm.keySet()代表的是双列集合中键的集合
+			String value = hm.get(h);						//get(h)根据键对象获取值对象
+			//遍历键的双列集合对象
+			for(Student key : h.keySet()) {					//h.keySet()获取集合总所有的学生键对象
+				String value2 = h.get(key);
+				System.out.println(key + "=" + value2 + "=" + value);
+			}
+		}
+    
+    
+     * @param args
+	 * 面试题
+	 * HashMap和Hashtable的区别
+	 * 共同点:
+	 * 底层都是哈希算法,都是双列集合
+	 * 区别:
+	 * 1,HashMap是线程不安全的,效率高,JDK1.2版本
+	 *   Hashtable是线程安全的,效率低,JDK1.0版本的
+	 * 2,HashMap可以存储null键和null值
+	 *   Hashtable不可以存储null键和null值
+	 */
