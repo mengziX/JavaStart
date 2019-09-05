@@ -1,0 +1,154 @@
+主要内容：SequenceInputStream，ByteArrayOutputStream，ObjectOutputStream，ObjectInputStream
+          PrintStream，SystemInOut，SystemIn，RandomAccessFile，Data，Properties
+
+
+SequenceInputStream
+* @param args
+	 * 整合两个输入流
+	 * SequenceInputStream(InputStream s1, InputStream s2)
+	 * 整合多个输入流
+	 * SequenceInputStream(Enumeration<? extends InputStream> e)
+	 * @throws IOException 
+	 */
+    FileInputStream fis1 = new FileInputStream("a.txt");
+		FileInputStream fis2 = new FileInputStream("b.txt");
+		FileInputStream fis3 = new FileInputStream("c.txt");
+    //SequenceInputStream sis = new SequenceInputStream(fis1, fis2);
+		Vector<FileInputStream> v = new Vector<>();					//创建集合对象
+		v.add(fis1);												//将流对象存储进来
+		v.add(fis2);
+		v.add(fis3);
+		Enumeration<FileInputStream> en = v.elements();
+		SequenceInputStream sis = new SequenceInputStream(en);		//将枚举中的输入流整合成一个
+		FileOutputStream fos = new FileOutputStream("d.txt");
+		int b;
+		while((b = sis.read()) != -1) {
+			fos.write(b);
+		}
+		sis.close();
+		fos.close();
+   
+   
+ByteArrayOutputStream
+	 * @param args
+	 * ByteArrayOutputStream
+	 * 内存输出流
+	 * 
+	 * FileInputStream读取中文的时候出现了乱码
+	 * 
+	 * 解决方案
+	 * 1,字符流读取
+	 * 2,ByteArrayOutputStream
+	 * @throws IOException 
+	 */
+    FileInputStream fis = new FileInputStream("e.txt");
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();			//在内存中创建了可以增长的内存数组
+		int b;
+		while((b = fis.read()) != -1) {
+			baos.write(b);													//将读取到的数据逐个写到内存中
+		}
+		//byte[] arr = baos.toByteArray();									//将缓冲区的数据全部获取出来,并赋值给arr数组
+		//System.out.println(new String(arr));
+		System.out.println(baos.toString());								//将缓冲区的内容转换为了字符串,在输出语句中可以省略调用toString方法
+		fis.close();
+   
+   
+ObjectOutputStream
+	 * @param args
+	 * 序列化:将对象写到文件上
+	 * @throws IOException 
+	 */
+   	Person p1 = new Person("张三", 23);
+		Person p2 = new Person("李四", 24);
+		ArrayList<Person> list = new ArrayList<>();
+		list.add(p1);
+		list.add(p2);
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("e.txt"));
+		oos.writeObject(list);								//把整个集合对象一次写出
+		oos.close();
+ 
+ 
+ObjectInputStream
+	 * ObjectInputStream
+	 * 对象输入流,反序列化
+	 */
+   	ObjectInputStream ois = new ObjectInputStream(new FileInputStream("e.txt"));
+		ArrayList<Person> list = (ArrayList<Person>) ois.readObject();		//将集合对象一次读取
+		for (Person person : list) {
+			System.out.println(person);
+		}
+		ois.close();
+    
+    
+PrintStream
+	 * PrintStream和PrintWriter分别是打印的字节流和字符流
+	 * 只操作数据目的的
+	 */
+   	PrintWriter pw = new PrintWriter(new FileOutputStream("f.txt"),true);
+		//pw.println(97);							//自动刷出功能只针对的是println方法
+		//pw.write(97);
+		pw.print(97);
+		pw.println(97);
+		pw.close();
+    ***
+    System.out.println("aaa");
+		PrintStream ps = System.out;			//获取标注输出流
+		ps.println(97);							//底层通过Integer.toString()将97转换成字符串并打印
+		ps.write(97);							//查找码表,找到对应的a并打印
+		Person p1 = new Person("张三", 23);
+		ps.println(p1);							//默认调用p1的toString方法
+		Person p2 = null;						//打印引用数据类型,如果是null,就打印null,如果不是null就打印对象的toString方法
+		ps.println(p2);
+		ps.close();
+    
+    
+SystemInOut
+		System.setIn(new FileInputStream("a.txt"));			//改变标准输入流
+		System.setOut(new PrintStream("b.txt"));			//改变标注输出流
+		InputStream is = System.in;							//获取标准的键盘输入流,默认指向键盘,改变后指向文件
+		PrintStream ps = System.out;						//获取标准输出流,默认指向的是控制台,改变后就指向文件
+		int b;
+		while((b = is.read()) != -1) {
+			ps.write(b);
+		}
+		//System.out.println();								//也是一个输出流,不用关,因为没有和硬盘上的文件产生关联的管道
+		is.close();
+		ps.close();
+		
+
+SystemIn
+		Scanner sc = new Scanner(System.in);
+		String line = sc.nextLine();
+		System.out.println(line);
+		sc.close();
+    
+    
+RandomAccessFile
+		RandomAccessFile raf = new RandomAccessFile("g.txt", "rw");
+		//raf.write(97);
+		//int x = raf.read();
+		//System.out.println(x);
+		raf.seek(0);					//在指定位置设置指针
+		raf.write(98);
+		raf.close();
+    
+    
+Data
+		DataInputStream dis = new DataInputStream(new FileInputStream("h.txt"));
+		int x = dis.readInt();
+		int y = dis.readInt();
+		System.out.println(x);
+		System.out.println(y);
+    
+    
+Properties
+	 * Properties是Hashtable的子类
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+   	Properties prop = new Properties();
+		prop.load(new FileInputStream("config.properties"));		//将文件上的键值对读取到集合中
+		prop.setProperty("tel", "18912345678");
+		prop.store(new FileOutputStream("config.properties"), null);//第二个参数是对列表参数的描述,可以给值,也可以给null
+		System.out.println(prop);
+    
