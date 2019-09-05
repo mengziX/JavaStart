@@ -1,0 +1,92 @@
+* @param args
+int（读）
+	 * @throws IOException  
+	 * read()方法读取的是一个字节,为什么返回是int,而不是byte
+	 * 
+	 * 00010100 00100100 01000001 11111111 0000000
+	 * 
+	 * 10000001    byte类型-1的原码
+	 * 11111110	   -1的反码
+	 * 11111111    -1的补码
+	 * 
+	 * 00000000 00000000 00000000 11111111
+	 */
+   FileInputStream fis = new FileInputStream("xxx.txt");	//创建流对象
+		int b;
+		while((b = fis.read()) != -1) {
+			System.out.println(b);
+		}
+		fis.close();
+
+
+out(写）
+	 * @throws IOException 
+	 * FileOutputStream在创建对象的时候是如果没有这个文件会帮我创建出来
+	 * 如果有这个文件就会先将文件清空
+	 */
+   FileOutputStream fos = new FileOutputStream("yyy.txt");		//创建字节输出流对象,如果没有就自动创建一个
+		//fos.write(97);				//虽然写出的是一个int数,但是到文件上的是一个字节,会自动去除前三个8位
+		//fos.write(98);        //如果想续写就在第二个参数传true
+		//fos.write(99);
+    
+    
+*Copy----
+    FileInputStream fis = new FileInputStream("双元.jpg");		//创建输入流对象,关联双元.jpg
+		FileOutputStream fos = new FileOutputStream("copy.jpg");	//创建输出流对象,关联copy.jpg
+		
+		int b;
+		while((b = fis.read()) != -1) {								//在不断的读取每一个字节
+			fos.write(b);											//将每一个字节写出
+		}
+    *-----
+    //第二种拷贝,不推荐使用,因为有可能会导致内存溢出
+		FileInputStream fis = new FileInputStream("致青春.mp3");		//创建输入流对象,关联致青春.mp3
+		FileOutputStream fos = new FileOutputStream("copy.mp3");	//创建输出流对象,关联copy.mp3
+		byte[] arr = new byte[fis.available()];						//创建与文件一样大小的字节数组
+		fis.read(arr);												//将文件上的字节读取到内存中
+		fos.write(arr);		
+    
+    
+    * @param args
+* 第三种拷贝
+	 * 定义小数组
+	 * @throws IOException 
+	 */
+   	FileInputStream fis = new FileInputStream("致青春.mp3");
+		FileOutputStream fos = new FileOutputStream("copy.mp3");
+		byte[] arr = new byte[1024 * 8];
+		int len;
+		while((len = fis.read(arr)) != -1) {				//如果忘记加arr,返回的就不是读取的字节个数,而是字节的码表值
+			fos.write(arr,0,len);
+		}
+    
+*Buffer
+	 * close方法
+	 * 具备刷新的功能,在关闭流之前,就会先刷新一次缓冲区,将缓冲区的字节全都刷新到文件上,再关闭,close方法刷完之后就能写了
+	 * flush方法?
+	 * 具备刷新的功能,刷完之后还可以继续写
+   	BufferedInputStream bis = new BufferedInputStream(new FileInputStream("致青春.mp3"));
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("copy.mp3"));
+		int b;
+		while((b = bis.read()) != -1) {
+			bos.write(b);
+		}
+    
+    
+* * 字节流读取中文的问题
+			* 字节流在读中文的时候有可能会读到半个中文,造成乱码 
+		* 字节流写出中文的问题
+			* 字节流直接操作的字节,所以写出中文必须将字符串转换成字节数组 
+			* 写出回车换行 write("\r\n".getBytes());
+	 * @throws IOException 
+	 */
+   FileOutputStream fos = new FileOutputStream("zzz.txt");
+		fos.write("我读书少,你不要骗我".getBytes());
+   FileInputStream fis = new FileInputStream("yyy.txt");
+		byte[] arr = new byte[4];
+		int len;
+		while((len = fis.read(arr)) != -1) {
+			System.out.println(new String(arr,0,len));
+		}
+    
+    
