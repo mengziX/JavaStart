@@ -1,0 +1,59 @@
+    BufferedReader br = new BufferedReader(new FileReader("xxx.txt"));
+		BufferedWriter bw = new BufferedWriter(new FileWriter("yyy.txt"));
+		int c;
+		while((c = br.read()) != -1) {
+			bw.write(c);
+		}
+    
+    
+    fw.close();				//Writer类中有一个2k的小缓冲区,如果不关流,就会将内容写到缓冲区里,关流会将缓冲区内容刷新,再关闭
+    
+    
+    FileReader fr = new FileReader("xxx.txt");
+		FileWriter fw = new FileWriter("yyy.txt");
+		char[] arr = new char[1024];
+		int len;
+		while((len = fr.read(arr)) != -1) {			//将文件上的数据读取到字符数组中
+			fw.write(arr,0,len);					//将字符数组中的数据写到文件上
+		}
+    
+    
+    //字符流不能拷贝纯文本的文件
+		FileReader fr = new FileReader("双元.jpg");
+		FileWriter fw = new FileWriter("copy.jpg");
+		int c;
+		while((c = fr.read()) != -1) {
+			fw.write(c);
+		}
+    
+    
+   * @param args
+	 * 带缓冲区的流中的特殊方法
+	 * readLine()
+	 * newLine();
+	 * 
+	 * newLine()与\r\n的区别
+	 * newLine()是跨平台的方法
+	 * \r\n只支持的是windows系统
+	 * @throws IOException 
+	 */
+   	BufferedReader br = new BufferedReader(new FileReader("zzz.txt"));
+		BufferedWriter bw = new BufferedWriter(new FileWriter("aaa.txt"));
+		String line;
+		while((line = br.readLine()) != null) {
+			bw.write(line);
+			//bw.newLine();							//写出回车换行符
+			//bw.write("\r\n");
+		}
+		br.close();
+		bw.close();
+    
+    
+    LineNumberReader lnr = new LineNumberReader(new FileReader("zzz.txt"));
+		String line;
+		lnr.setLineNumber(100);
+		while((line = lnr.readLine()) != null) {
+			System.out.println(lnr.getLineNumber() + ":" + line);
+		}
+		
+    
