@@ -90,3 +90,14 @@ out(写）
 		}
     
     
+		BufferedReader br = 								//更高效的读
+				new BufferedReader(new InputStreamReader(new FileInputStream("utf-8.txt"), "utf-8"));
+		BufferedWriter bw = 								//更高效的写
+				new BufferedWriter(new OutputStreamWriter(new FileOutputStream("gbk.txt"), "gbk"));
+		int c;
+		while((c = br.read()) != -1) {
+			bw.write(c);
+		}
+		
+		br.close();
+		bw.close();
