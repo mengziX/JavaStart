@@ -16,9 +16,19 @@
     System.out.println(new String(arr,0,len));
     
     
-	 * * 1.发送Send
+* * 1.发送Send
 	 * 创建DatagramSocket, 随机端口号
 	 * 创建DatagramPacket, 指定数据, 长度, 地址, 端口
 	 * 使用DatagramSocket发送DatagramPacket
 	 * 关闭DatagramSocket
-    
+		Scanner scan=new Scanner(System.in);
+		DatagramSocket socket=new DatagramSocket();
+		while(true){
+			String str=scan.nextLine();
+			if("quit".equals(str)) {
+				break;
+			}
+			DatagramPacket pocket=new DatagramPacket(str.getBytes(),str.getBytes().length,InetAddress.getByName("127.0.0.1"), 6666);
+			socket.send(pocket);
+		}
+		socket.close();
