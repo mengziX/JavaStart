@@ -1,0 +1,264 @@
+重要点：notify,notifyAll,ReentrantLock,ThreadGroup,ExecutorService，Callable
+，Runtime，Timer
+
+
+
+class MyThread extends Thread {				//1,继承Thread
+	public void run() {						//2,重写run方法
+		for(int i = 0; i < 1000; i++) {		//3,将要执行的代码写在run方法中
+			System.out.println("aaaaaaaaaaaa");
+		}
+	}
+}
+	public static void main(String[] args) {
+		MyThread mt = new MyThread();		//4,创建Thread类的子类对象
+		mt.start();							//5,开启线程
+		
+		for(int i = 0; i < 1000; i++) {
+			System.out.println("bb");
+		}
+	}
+  
+ 
+ 
+  Runnable
+  class MyRunnable implements Runnable //定义一个类实现Runnable
+  MyRunnable mr = new MyRunnable(); //创建Runnable的子类对象
+  Thread t = new Thread(mr);			//将其当作参数传递给Thread的构造函数
+  t.start();							//开启线程
+  
+（一）继承Thread类创建多线程----单线程下面的代码是一个死循环，但是不会执行main里面的循环语句，而是run（）里面的语句，这是因为该程序是一个单线程程序，当调用MyThread类的run（）方法时，遇到死循环，循环一直进行。因此，MyThread类的打印语句将永远执行，而main（）方法中的打印语句无法得到执行。
+(二)通过继承Thread类实现多线程：
+如果希望（一）中的两个循环打印语句都能够执行的话，那么就需要实现多线程。为此jdk提供了一个多线程类Thread，通过继承Thread类，并重写Thread类中的run（）方法便可以实现多线程。在Thread类中，提供了一个start（）方法用于启动新线程，线程启动后，系统就会自动调用run（）方法。
+（三）实现Runnable接口创建多线程
+        在（二）中通过继承Thread类实现多线程，但是这种方式有一定的局限性。因为在java中只支持单继承，一个类一旦继承了某个父类就无法再继承Thread类，比如学生类Student继承了person类，就无法再继承Thread类创建的线程。为了克服这种弊端，Thread类提供了另外一种构造方法Thread（Runnable target），其中Runnable是一个接口，它只有一个run（）方法。当通过Thread（Runnable target）构造方法创建一个线程对象时，只需该方法传递一个实现了Runnable接口的实例对象，这样创建的线程将调用实现了Runnable接口中的run（）方法作为运行代码，二不需要调用Thread类中的run（）方法。
+
+
+setName
+		Thread t1 = new Thread() {
+			public void run() {
+				//this.setName("张三");
+				System.out.println(this.getName() + "....aaaaaaaaaaaaa");
+			}
+		};
+		Thread t2 = new Thread() {
+			public void run() {
+				//this.setName("李四");
+				System.out.println(this.getName() + "....bb");
+			}
+		};
+		t1.setName("张三");
+		t2.setName("李四");
+		t1.start();
+		t2.start();
+    
+  
+currentThread
+  **获取当前线程
+		Thread.currentThread().setName("我是主线程");
+    
+sleep
+  **线程休眠
+  Thread.sleep(1000);
+  
+  
+* @param args
+* 守护线程  低优先级（增加优先级）
+	 */
+   Thread t2 = new Thread();
+   t2.setDaemon(true);	
+   
+   
+* join(), 当前线程暂停, 等待指定的线程执行结束后, 当前线程再继续
+	 */
+   Thread t2 = new Thread() {
+			public void run() {
+				for(int i = 0; i < 10; i++) {
+					if(i == 2) {
+						try {
+							//t1.join();
+							t1.join(1);					//插队指定的时间,过了指定时间后,两条线程交替执行
+						} catch (InterruptedException e) {
+							
+							e.printStackTrace();
+						}
+					}
+					System.out.println(getName() + "...bb");
+				}
+			}
+		};
+    
+ 
+* yield让出cpu礼让线程
+	 */
+  class MyThread extends Thread {
+	public void run() {
+		for(int i = 1; i <= 1000; i++) {
+			if(i % 10 == 0) {
+				Thread.yield();						//让出CPU
+			}
+			System.out.println(getName() + "..." + i);
+		}
+	}
+}
+
+
+**Priority 
+		//t1.setPriority(10);					设置最大优先级
+		//t2.setPriority(1);
+    t1.setPriority(Thread.MIN_PRIORITY);		//设置最小的线程优先级
+		t2.setPriority(Thread.MAX_PRIORITY);		//设置最大的线程优先级
+    
+    
+* 同步代码块
+	 */
+   Demo d=new Demo();
+   synchronized(d) {
+   .....
+   .....
+   }
+
+
+//非静态的同步方法的锁对象是神马?
+	//答:非静态的同步方法的锁对象是this
+	//静态的同步方法的锁对象是什么?
+	//是该类的字节码对象
+  public static synchronized void print1() {							//同步方法只需要在方法上加synchronized关键字即可
+  public static void print2() {
+		//synchronized(new Demo()) {							//锁对象不能用匿名对象,因为匿名对象不是同一个对象
+    
+    
+//火车票案例
+package com.heima.syn;
+public class Demo4_Ticket {
+	/**
+	 * @param args
+	 * 火车站卖票的例子用实现Runnable接口
+	 */
+	public static void main(String[] args) {
+		MyTicket mt = new MyTicket();
+		new Thread(mt).start();
+		new Thread(mt).start();
+		new Thread(mt).start();
+		new Thread(mt).start();
+		
+		/*Thread t1 = new Thread(mt);				//多次启动一个线程是非法的
+		t1.start();
+		t1.start();
+		t1.start();
+		t1.start();*/
+	}
+}
+class MyTicket implements Runnable {
+	private int tickets = 100;
+	@Override
+	public void run() {
+		while(true) {
+			synchronized(this) {
+				if(tickets <= 0) {
+					break;
+				}
+				try {
+					Thread.sleep(10);				//线程1睡,线程2睡,线程3睡,线程4睡
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				}
+				System.out.println(Thread.currentThread().getName() + "...这是第" + tickets-- + "号票");
+			}
+		}
+	}
+}
+
+
+/*1,在同步代码块中,用哪个对象锁,就用哪个对象调用wait方法
+ * 2,为什么wait方法和notify方法定义在Object这类中?
+ * 	因为锁对象可以是任意对象,Object是所有的类的基类,所以wait方法和notify方法需要定义在Object这个类中
+ * 3,sleep方法和wait方法的区别?
+ * a,sleep方法必须传入参数,参数就是时间,时间到了自动醒来
+ *   wait方法可以传入参数也可以不传入参数,传入参数就是在参数的时间结束后等待,不传入参数就是直接等待
+ * b,sleep方法在同步函数或同步代码块中,不释放锁,睡着了也抱着锁睡
+ * 	wait方法在同步函数或者同步代码块中,释放锁
+ */ 
+ *this.notify();						//随机唤醒单个等待的线程
+ *this.notifyAll();
+ 
+ 
+ReentrantLock是一个可重入且独占式的锁，它具有与使用synchronized监视器锁相同的基本行为和语义，但与synchronized关键字相比，它更灵活、更强大，增加了轮询、超时、中断等高级功能。ReentrantLock，顾名思义，它是支持可重入锁的锁，是一种递归无阻塞的同步机制。除此之外，该锁还支持获取锁时的公平和非公平选择。
+实现重进入
+    *重进入是指任意线程在获取到锁之后能够再次获取该锁而不会被锁阻塞，该特性的首先需要解决以下两个问题：
+    线程再次获取锁：所需要去识别获取锁的线程是否为当前占据锁的线程，如果是，则再次获取成功；
+    锁的最终释放：线程重复n次获取了锁，随后在第n次释放该锁后，其它线程能够获取到该锁。锁的最终释放要求锁对于获取进行计数自增，计数表示当前线程被重复获取的次数，而被释放时，计数自减，当计数为0时表示锁已经成功释放。
+class Printer3 {
+	private ReentrantLock r = new ReentrantLock();
+	private Condition c1 = r.newCondition();
+	private Condition c2 = r.newCondition();
+	private int flag = 1;
+	public void print1() throws InterruptedException {							
+		r.lock();								//获取锁
+			if(flag != 1) {
+				c1.await();
+			}
+			System.out.print("黑");
+			flag = 2;
+			//this.notify();						//随机唤醒单个等待的线程
+			c2.signal();
+		r.unlock();								//释放锁
+	}
+	public void print2() throws InterruptedException {
+		r.lock();
+			if(flag != 2) {
+				c2.await();
+			}
+			System.out.print("传");
+			flag = 2;
+			//this.notify();
+			c1.signal();
+		r.unlock();
+	}
+}
+
+
+ThreadGroup tg = new ThreadGroup("我是一个新的线程组");		//创建新的线程组
+		MyRunnable mr = new MyRunnable();						//创建Runnable的子类对象
+		Thread t1 = new Thread(tg, mr, "张三");					//将线程t1放在组中
+		Thread t2 = new Thread(tg, mr, "李四");					//将线程t2放在组中
+		System.out.println(t1.getThreadGroup().getName());		//获取组名
+		System.out.println(t2.getThreadGroup().getName());
+  
+  
+ExecutorService pool = Executors.newFixedThreadPool(2);//创建线程池
+		pool.submit(new MyRunnable());				//将线程放进池子里并执行
+		pool.submit(new MyRunnable());
+		pool.shutdown();							//关闭线程池
+    
+    
+Callable与Runnable 
+相同点:都是接口,都可以编写多线程程序,都采用Thread.start()启动线程,回到顶部
+不同点:Runnable没有返回值；Callable可以返回执行结果，是个泛型，和Future、FutureTask配合可以用来获取异步执行的结果
+Callable接口的call()方法允许抛出异常；Runnable的run()方法异常只能在内部消化，不能往上继续抛
+注：Callalbe接口支持返回执行结果，需要调用FutureTask.get()得到，此方法会阻塞主进程的继续往下执行，如果不调用不会阻塞。
+**Future获取子线程运行的结果
+		ExecutorService pool = Executors.newFixedThreadPool(2);//创建线程池
+		Future<Integer> f1 = pool.submit(new MyCallable(100));				//将线程放进池子里并执行
+		Future<Integer> f2 = pool.submit(new MyCallable(50));
+		System.out.println(f1.get());
+		System.out.println(f2.get());
+		pool.shutdown();							//关闭线程池
+    
+    
+Runtime
+Runtime r = Runtime.getRuntime();			//获取运行时对象
+		//r.exec("shutdown -s -t 300");
+		r.exec("shutdown -a");
+    
+    
+Timer
+		Timer t = new Timer();
+		//在指定时间安排指定任务
+		//第一个参数,是安排的任务,第二个参数是执行的时间,第三个参数是过多长时间再重复执行
+		t.schedule(new MyTimerTask(), new Date(188, 6, 1, 14, 22, 50),3000);	
+		while(true) {
+			Thread.sleep(1000);
+			System.out.println(new Date());
+		}
