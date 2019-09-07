@@ -1,4 +1,4 @@
-重要点：DatagramSocket、DatagramPacket、Socket、
+重要点：DatagramSocket、DatagramPacket、Socket、ServerSocket
 
 ** .接收Receive
 	 * 创建DatagramSocket, 指定端口号
