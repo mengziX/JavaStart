@@ -1,0 +1,54 @@
+代理模式
+代理在我们日常生活中经常出现，例如我们去租房，为了方便我们会去找中介，让他们帮我去找房子，
+事后我们给他一定比例的中介费就可以了，这种好处就不需要我们自己去奔波租房。
+在程序中也有代理这种思想，当我们想在一个已有的类的方法被调用前和调用后都输出一段日志信息，
+而我们目前无法修改类内部的结构，但是我们可以生成一个代理对象，通过代理对象去调用目标对象
+的这些方法，
+因为目标方法会被代理对象所调用，所以在调用的前后就可以做一些我们想要加入的功能了。
+
+
+
+动态代理
+是指在使用时再创建代理类实例。
+动态代理的优点可以解决创建多个静态代理的问题，避免代码重复，有更高的灵活性。但其缺点是内
+部使用Java反射机制来间接去调用真实角色的业务逻辑。
+在应用场景来说，因为 Java 类是单继承的，并且动态代理生成的代理对象是继承至 java.lang.Proxy
+类，所以只能针对接口来创建代理对象，而不能通过类来创建代理对象。
+
+
+Proxy 与 InvocationHandler 的介绍
+在 Java 动态代理机制中需要关于下面两个类：
+java.lang.reflect.Proxy
+java.lang.reflect.InvocationHandler
+
+Proxy
+在 Java 中已经为我们提供了生成动态代理的对象的 API 了，它就是 java.lang.reflect.Proxy。
+在 JDK 文档中的介绍如下：
+Proxy provides static methods for creating dynamic proxy classes and instances, and it is 
+also the superclass of all dynamic proxy classes created by those methods. 
+
+
+public class MyInvocationHandler implements InvocationHandler {
+	private Object target;
+	public MyInvocationHandler(Object target) {
+		this.target = target;
+	}
+	@Override
+	public Object invoke(Object proxy, Method method, Object[] args)
+			throws Throwable {
+		System.out.println("权限校验");
+		method.invoke(target, args);					//执行被代理target对象的方法
+		System.out.println("日志记录");
+		return null;
+	}
+}
+
+
+		StudentImp si = new StudentImp();
+		si.login();
+		si.submit();
+		System.out.println("-------------------------------");
+		MyInvocationHandler m = new MyInvocationHandler(si);
+		Student s = (Student)Proxy.newProxyInstance(si.getClass().getClassLoader(), si.getClass().getInterfaces(), m);
+		s.login();
+		s.submit();
