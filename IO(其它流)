@@ -1,6 +1,15 @@
 主要内容：SequenceInputStream，ByteArrayOutputStream，ObjectOutputStream，ObjectInputStream
           PrintStream，SystemInOut，SystemIn，RandomAccessFile，Data，Properties
 
+IO流的分类
+根据处理数据类型的不同分为：字符流和字节流
+根据数据流向不同分为：输入流和输出流
+ 
+字符流和字节流
+字符流的由来： 因为数据编码的不同，而有了对字符进行高效操作的流对象。本质其实就是基于字节流读取时，去查了指定的码表。 字节流和字符流的区别：
+读写单位不同：字节流以字节（8bit）为单位，字符流以字符为单位，根据码表映射字符，一次可能读多个字节。
+处理对象不同：字节流能处理所有类型的数据（如图片、avi等），而字符流只能处理字符类型的数据。
+结论：只要是处理纯文本数据，就优先考虑使用字符流。 除此之外都使用字节流。
 
 SequenceInputStream
 * @param args
