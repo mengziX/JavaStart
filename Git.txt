@@ -1,5 +1,6 @@
 git add ""
 git commit -m ""
-git push
+git push 提交
 git reset
 git log
+git pull 下载
