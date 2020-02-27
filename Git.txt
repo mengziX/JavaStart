@@ -4,3 +4,6 @@ git push 提交
 git reset
 git log
 git pull 下载
+git branch branch1 新建分支
+git checkout -b branch2 切换分支
+git merge branch1 合并分支
